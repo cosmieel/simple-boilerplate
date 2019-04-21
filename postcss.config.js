@@ -6,12 +6,14 @@ module.exports = () => ({
     'cssnano': {},
     'postcss-preset-env': {
       stage: 3,
-      browsers: ['last 5 versions', '> 5%'],
+      browsers: ['ie >= 8', 'last 5 versions', '> 5%'],
       features: {
         'custom-media-queries': true,
       },
     },
+    
   },
 });
 
 // https://preset-env.cssdb.org/features
+
