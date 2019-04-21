@@ -1,9 +1,14 @@
 const path = require('path');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+// const imageminMozjpeg = require('imagemin-mozjpeg');
+// const imageminGifsicle = require('imagemin-gifsicle');
+// const imageminJpegtran = require('imagemin-jpegtran');
+// const imageminOptipng = require('imagemin-optipng');
+// const imageminSvgo = require('imagemin-svgo');
 const ImageminPlugin = require('imagemin-webpack-plugin').default;
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const templateParameters = require('./src/template-parameters.js');
+// const templateParameters = require('./src/template-parameters.js');
 
 module.exports = {
   mode: 'production',
@@ -13,7 +18,7 @@ module.exports = {
   ],
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'js/bundle.js',
+    filename: 'src/js/bundle.js',
   },
   stats: {
     colors: true,
@@ -41,6 +46,7 @@ module.exports = {
             loader: 'css-loader',
             options: {
               importLoaders: 1,
+              url: false,
             },
           },
           {
@@ -55,7 +61,7 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        include: path.resolve(__dirname, 'src/views'),
+        include: path.resolve(__dirname, './'),
         use: ['raw-loader'],
       },
       {
@@ -65,58 +71,53 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/',
+              outputPath: 'src/fonts/',
             },
           },
         ],
       },
       {
-        test: /\.(gif|png|jpe?g|svg)$/i,
+        test: /\.(jpe?g|png|gif|svg)$/i,
         use: {
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'img/',
+            outputPath: 'src/img/',
           },
         },
       },
     ],
   },
   plugins: [
-    new ImageminPlugin({ test: /\.(jpe?g|png|gif|svg)$/i }),
     new MiniCssExtractPlugin({
-      filename: 'css/style.css',
+      filename: 'src/css/main.css',
     }),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, 'src/fonts'),
-        to: path.resolve(__dirname, 'public/fonts'),
+        to: path.resolve(__dirname, 'public/src/fonts'),
       },
       {
         from: path.resolve(__dirname, 'src/img'),
-        to: path.resolve(__dirname, 'public/img'),
-      },
-      {
-        from: path.resolve(__dirname, 'src/favicon.ico'),
-        to: path.resolve(__dirname, 'public/'),
+        to: path.resolve(__dirname, 'public/src/img'),
       },
     ]),
     new HtmlWebpackPlugin({
       inject: true,
-      template: path.resolve(__dirname, 'src/index.html'),
+      template: path.resolve(__dirname, './index.html'),
       filename: path.resolve(__dirname, 'public/index.html'),
     }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      templateParameters,
-      template: path.resolve(__dirname, 'src/404.html'),
-      filename: path.resolve(__dirname, 'public/404.html'),
-    }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      templateParameters,
-      template: path.resolve(__dirname, 'src/500.html'),
-      filename: path.resolve(__dirname, 'public/500.html'),
+    
+    new ImageminPlugin({ 
+      test: /\.(jpe?g|png|gif|svg)$/i,
+      pngquant: ({quality: 50-60}),
+      // plugins: [
+      //   imageminMozjpeg({quality: 50}),
+      //   imageminJpegtran({progressive: true}),
+      //   imageminGifsicle({interlaced: true}),
+      //   imageminSvgo({removeViewBox: true}),
+      //   imageminOptipng({optimizationLevel: 2}),
+      // ]
     }),
   ],
 };
