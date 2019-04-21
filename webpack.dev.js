@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const templateParameters = require('./src/template-parameters.js');
+// const templateParameters = require('./src/template-parameters.js');
 
 module.exports = {
   devtool: 'source-map',
@@ -15,7 +15,7 @@ module.exports = {
   ],
   output: {
     path: path.resolve(__dirname, 'public'),
-    filename: 'js/bundle.js',
+    filename: 'src/js/bundle.js',
   },
   optimization: {
     noEmitOnErrors: true,
@@ -26,7 +26,7 @@ module.exports = {
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        use: ['babel-loader', 'eslint-loader'],
+        use: ['babel-loader'],
       },
       {
         test: /\.css$/,
@@ -39,6 +39,7 @@ module.exports = {
             options: {
               sourceMap: true,
               importLoaders: 1,
+              url: false,
             },
           },
           {
@@ -54,7 +55,7 @@ module.exports = {
       },
       {
         test: /\.html$/,
-        include: path.resolve(__dirname, 'src/views'),
+        include: path.resolve(__dirname, './'),
         use: ['raw-loader'],
       },
       {
@@ -64,7 +65,7 @@ module.exports = {
             loader: 'file-loader',
             options: {
               name: '[name].[ext]',
-              outputPath: 'fonts/',
+              outputPath: 'src/fonts/',
             },
           },
         ],
@@ -75,7 +76,7 @@ module.exports = {
           loader: 'file-loader',
           options: {
             name: '[name].[ext]',
-            outputPath: 'img/',
+            outputPath: 'src/img/',
           },
         },
       },
@@ -101,39 +102,39 @@ module.exports = {
   plugins: [
     new webpack.LoaderOptionsPlugin({ options: {} }),
     new MiniCssExtractPlugin({
-      filename: 'css/style.css',
+      filename: 'src/css/main.css',
     }),
     new OpenBrowserPlugin({ url: 'http://localhost:9000' }),
     new CopyWebpackPlugin([
       {
         from: path.resolve(__dirname, 'src/fonts'),
-        to: path.resolve(__dirname, 'public/fonts'),
+        to: path.resolve(__dirname, 'public/src/fonts'),
       },
       {
         from: path.resolve(__dirname, 'src/img'),
-        to: path.resolve(__dirname, 'public/img'),
+        to: path.resolve(__dirname, 'public/src/img'),
       },
-      {
-        from: path.resolve(__dirname, 'src/favicon.ico'),
-        to: path.resolve(__dirname, 'public/'),
-      },
+      // {
+      //   from: path.resolve(__dirname, 'src/favicon.ico'),
+      //   to: path.resolve(__dirname, 'public/'),
+      // },
     ]),
     new HtmlWebpackPlugin({
       inject: true,
-      template: path.resolve(__dirname, 'src/index.html'),
+      template: path.resolve(__dirname, './index.html'),
       filename: path.resolve(__dirname, 'public/index.html'),
     }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      templateParameters,
-      template: path.resolve(__dirname, 'src/404.html'),
-      filename: path.resolve(__dirname, 'public/404.html'),
-    }),
-    new HtmlWebpackPlugin({
-      inject: true,
-      templateParameters,
-      template: path.resolve(__dirname, 'src/500.html'),
-      filename: path.resolve(__dirname, 'public/500.html'),
-    }),
+    // new HtmlWebpackPlugin({
+    //   inject: true,
+    //   templateParameters,
+    //   template: path.resolve(__dirname, 'src/404.html'),
+    //   filename: path.resolve(__dirname, 'public/404.html'),
+    // }),
+    // new HtmlWebpackPlugin({
+    //   inject: true,
+    //   templateParameters,
+    //   template: path.resolve(__dirname, 'src/500.html'),
+    //   filename: path.resolve(__dirname, 'public/500.html'),
+    // }),
   ],
 };
